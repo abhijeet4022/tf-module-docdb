@@ -31,14 +31,14 @@ resource "aws_security_group" "main" {
 
 # Parameter Group creation for database
 resource "aws_docdb_cluster_parameter_group" "main" {
-  family      = "docdb4.0"
+  family      = var.engine_family
   name        = "${local.name_prefix}-pg"
   description = "${local.name_prefix}-pg"
   tags        = merge(local.tags, { Name = "${local.name_prefix}-pg" })
 }
 
 # docdb_cluster creation
-resource "aws_docdb_cluster" "docdb" {
+resource "aws_docdb_cluster" "main" {
   cluster_identifier              = "${local.name_prefix}-cluster"
   engine                          = "docdb"
   master_username                 = data.aws_ssm_parameter.master_username.value
@@ -53,4 +53,14 @@ resource "aws_docdb_cluster" "docdb" {
   tags                            = merge(local.tags, { Name = "${local.name_prefix}-cluster" })
 
 }
+
+# docdb_cluster instance creation.
+resource "aws_docdb_cluster_instance" "main" {
+  count              = var.instance_count
+  identifier         = "${local.name_prefix}-cluster-instance-${count.index+1}"
+  cluster_identifier = aws_docdb_cluster.main.id
+  instance_class     = var.instance_class
+}
+
+
 
