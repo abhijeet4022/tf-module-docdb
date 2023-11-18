@@ -5,7 +5,7 @@ variable "backup_retention_period" {}
 variable "preferred_backup_window" {}
 variable "skip_final_snapshot" {}
 variable "vpc_id" {}
-variable "docdb_sg_ingress_cidr" {}
+variable "db_sg_ingress_cidr" {}
 variable "engine_version" {}
 variable "engine_family" {}
 variable "instance_count" {}
